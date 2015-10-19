@@ -66,6 +66,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
                 mLogo.setImageResource(R.mipmap.open_left_menu);
             }
         });
+        startActivity(new Intent(this,LoginActivity.class));
     }
 
     @Override
