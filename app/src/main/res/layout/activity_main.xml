@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="com.yalantis.taurus.PullToRefreshView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:clipToPadding="false"
+    android:fitsSystemWindows="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#64AEFC"
+        android:padding="5dp">
+
+        <ImageView
+            android:id="@+id/bar_logo"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/open_left_menu" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/bar_logo"
+            android:text="选书App"
+            android:layout_centerVertical="true"
+            android:textColor="#fff"
+            android:textSize="25dp" />
+
+        <ImageView
+            android:id="@+id/bar_search"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/search_book" />
+    </RelativeLayout>
+
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/id_drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+        <com.yalantis.taurus.PullToRefreshView
+            android:id="@+id/list_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:type="sun">
+
+            <ListView
+                android:divider="@null"
+                android:dividerHeight="0dp"
+                android:scrollbars="none"
+                android:background="#ffffffff"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </com.yalantis.taurus.PullToRefreshView>
+
+        <org.build.buybook.cusview.NavigationView
+            android:id="@+id/id_nv_menu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            android:divider="@null"
+            android:background="#64AEFC"
+            android:fitsSystemWindows="true">
+
+        </org.build.buybook.cusview.NavigationView>
+    </android.support.v4.widget.DrawerLayout>
+</LinearLayout>
