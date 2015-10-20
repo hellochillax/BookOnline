@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.ListView;
 
 import com.yalantis.taurus.PullToRefreshView;
 
@@ -32,6 +33,8 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     ImageView mSearch;
     @Bind(R.id.list_view)
     PullToRefreshView mPtrv;
+    @Bind(R.id.in_list_view)
+    ListView listView;
 
     @OnClick(R.id.bar_logo)
     public void bar_logo() {
@@ -66,7 +69,19 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
                 mLogo.setImageResource(R.mipmap.open_left_menu);
             }
         });
-        startActivity(new Intent(this,LoginActivity.class));
+        listView.setAdapter(new BookListAdapter());
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        });
+        mPtrv.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mPtrv.setRefreshing(false);
+            }
+        });
     }
 
     @Override
@@ -94,13 +109,13 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
 
         @Override
         public int getCount() {
-            return 0;
+            return App.courseList.size();
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder holder=ViewHolder.get(MainActivity.this,convertView,R.layout.book_list_item,position,parent);
-
+            holder.setText(R.id.book_name,App.courseList.get(position).name);
             return holder.getConvertView();
         }
     }

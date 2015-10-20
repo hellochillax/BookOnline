@@ -53,6 +53,7 @@
             app:type="sun">
 
             <ListView
+                android:id="@+id/in_list_view"
                 android:divider="@null"
                 android:dividerHeight="0dp"
                 android:scrollbars="none"

@@ -21,11 +21,13 @@
             android:src="@mipmap/back" />
 
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/bar_back"
+            android:layout_toLeftOf="@id/bar_search"
+            android:layout_marginRight="10dp"
             android:hint="请输入书名"
             android:textColorHint="@color/left_list_text_color"
             android:gravity="center_vertical"

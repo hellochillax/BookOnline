@@ -11,16 +11,34 @@ import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 
+import org.build.buybook.model.Book;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by MAC on 15/10/20.
  */
 public class App extends Application {
+
+
+    /**
+     * 课表列表
+     */
+    public static List<Book> courseList=new ArrayList();
+
+
+
+
+
+
 
     private DisplayImageOptions mOptions;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        initImageLoader();
     }
 
     private void initImageLoader() {

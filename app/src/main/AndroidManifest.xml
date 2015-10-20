@@ -3,18 +3,20 @@
     package="org.build.buybook" >
     <uses-permission android:name="android.permission.INTERNET"/>
     <application
+        android:name=".avtivity.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
-        <activity android:name=".avtivity.MainActivity" >
+        <activity android:name=".avtivity.WelcomeActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".avtivity.MainActivity"/>
         <activity android:name=".avtivity.SelectedBook"/>
         <activity android:name=".avtivity.SearchBook"/>
         <activity android:name=".avtivity.LoginActivity"/>
