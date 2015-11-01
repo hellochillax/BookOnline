@@ -2,46 +2,112 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_horizontal"
     android:clipToPadding="false"
     android:fitsSystemWindows="true"
+    android:gravity="center"
     android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/user_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="账号" />
+    <ImageView
+        android:layout_width="156dp"
+        android:layout_height="156dp"
+        android:layout_marginTop="30dp"
+        android:src="@mipmap/school_logo" />
 
-    <EditText
-        android:id="@+id/user_pwd"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="27dp"
+        android:gravity="center_vertical"
+        android:background="@mipmap/edit_bg">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="5dp"
+            android:src="@mipmap/username"/>
+
+        <EditText
+            android:id="@+id/user_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:layout_marginLeft="10dp"
+            android:textColorHint="#d7d7d7"
+            android:inputType="number"
+            android:hint="账号" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="18dp"
+        android:gravity="center_vertical"
+        android:background="@mipmap/edit_bg">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="5dp"
+            android:src="@mipmap/pwd"/>
+
+        <EditText
+            android:id="@+id/user_pwd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:textColorHint="#d7d7d7"
+            android:layout_marginLeft="10dp"
+            android:inputType="textPassword"
+            android:hint="密码" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="18dp"
+        android:gravity="center_vertical"
+        android:background="@mipmap/edit_bg">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="5dp"
+            android:src="@mipmap/validate"/>
+
+        <EditText
+            android:id="@+id/user_validate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:layout_marginLeft="5dp"
+            android:textColorHint="#d7d7d7"
+            android:inputType="number"
+            android:hint="验证码" />
+    </LinearLayout>
+    <ImageView
+        android:id="@+id/user_validate_image"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="密码" />
-    <EditText
-        android:id="@+id/user_validate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="验证码" />
-    <TextView
+        android:layout_height="89dp"
+        android:background="@drawable/validate_image_bg"
+        android:layout_marginTop="18dp"/>
+    <Button
         android:id="@+id/user_login"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="登陆"/>
+        android:layout_height="49dp"
+        android:background="@mipmap/login_ok_bg"
+        android:layout_marginTop="18dp"
+        android:text="登        陆"
+        android:textSize="26sp"
+        android:gravity="center"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:textColor="#ffffff"/>
 
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:id="@+id/user_validate_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
 
-    </FrameLayout>
 
 </LinearLayout>

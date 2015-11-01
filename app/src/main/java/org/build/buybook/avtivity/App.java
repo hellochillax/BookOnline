@@ -23,14 +23,14 @@ public class App extends Application {
 
 
     /**
-     * 课表列表
+     * 书籍总列表
      */
     public static List<Book> courseList=new ArrayList();
 
-
-
-
-
+    /**
+     * 已订购图书列表
+     */
+    public static List<Book> orderList=new ArrayList<>();
 
 
     private DisplayImageOptions mOptions;
@@ -58,7 +58,6 @@ public class App extends Application {
                 .displayer(new RoundedBitmapDisplayer(20))// 是否设置为圆角，弧度为多少
                 .displayer(new FadeInBitmapDisplayer(100))// 是否图片加载好后渐入的动画时间
                 .build();// 构建完成
-
 
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
                 this)

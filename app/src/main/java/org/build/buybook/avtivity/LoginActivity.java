@@ -1,19 +1,28 @@
 package org.build.buybook.avtivity;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.lidroid.xutils.util.LogUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import org.build.buybook.R;
 import org.build.buybook.config.Constant;
+import org.build.buybook.db.BookListDao;
+import org.build.buybook.model.Book;
 import org.build.buybook.utils.CacheUtils;
 import org.build.buybook.utils.Statesutil;
 import org.jsoup.Jsoup;
@@ -56,6 +65,7 @@ public class LoginActivity extends BaseActivity {
     public void to_change(){
         new LoginPagerTask().execute();
     }
+    Dialog dialog;
     @OnClick(R.id.user_login)
     public void to_login() {
         utils=new CacheUtils(this, CacheUtils.CacheType.FOR_ACCOUNT);
@@ -67,6 +77,10 @@ public class LoginActivity extends BaseActivity {
         } else if (TextUtils.isEmpty(validateStr)) {
             showToast("验证码不能为空");
         } else {
+            if(dialog==null){
+                dialog=create(this,"登陆中,请稍候...");
+            }
+            dialog.show();
             new LoginTask().execute();
         }
 
@@ -74,15 +88,19 @@ public class LoginActivity extends BaseActivity {
     Handler handler=new Handler(){
         @Override
         public void handleMessage(Message msg) {
+            dialog.dismiss();
             switch (msg.what){
                 case 1:
                     showToast("您输入的验证码不正确");
+                    new LoginPagerTask().execute();
                     break;
                 case 2:
                     showToast("账号或密码错误");
+                    new LoginPagerTask().execute();
                     break;
                 case 3:
                     showToast("网络错误");
+                    new LoginPagerTask().execute();
                     break;
             }
         }
@@ -90,24 +108,24 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SystemBarTintManager tintManager = new SystemBarTintManager(this);
+        tintManager.setStatusBarTintEnabled(true);
+        tintManager.setStatusBarTintResource(R.color.left_list_text_color);//通知栏所需颜色
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+        if(utils==null){
+            utils=new CacheUtils(LoginActivity.this, CacheUtils.CacheType.FOR_ACCOUNT);
+        }
+        userName.setText(utils.getCache(CacheUtils.USER_NAME));
+        userPwd.setText(utils.getCache(CacheUtils.USER_PWD));
         new LoginPagerTask().execute();
     }
 
     private class LoginTask extends AsyncTask {
-        /**
-         * j_username:1511640120
-         * j_password:1511640120
-         * j_captcha:55734
-         *
-         * @param params
-         * @return
-         */
+
         @Override
         protected Object doInBackground(Object[] params) {
             String ck = new HttpCookie("JSESSIONID", cookieStr.substring(1 + cookieStr.lastIndexOf("=")).toString()).toString().replaceAll("\"", "");
-//            getNetData(Constant.URL_LOGIN_CHECK + "?j_username=" + nameStr + "&j_password=" + pwdStr + "&j_captcha=" + validateStr, new HttpCookie("JSESSIONID", ck).toString());
             try {
                 StringBuffer sb = new StringBuffer();
                 HttpURLConnection conn = (HttpURLConnection) new URL(Constant.URL_LOGIN_CHECK).openConnection();
@@ -120,7 +138,6 @@ public class LoginActivity extends BaseActivity {
                 conn.connect();
                 BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream(), "gbk"));
                 String post = "j_username=" + URLEncoder.encode(nameStr, "gbk") + "&j_password=" + URLEncoder.encode(pwdStr, "gbk") + "&j_captcha=" + URLEncoder.encode(validateStr, "gbk");
-//                String post="j_username="+ "1511640120"+"&j_password="+"1511640120"+"&j_captcha="+URLEncoder.encode(validateStr,"gbk");
                 writer.write(post);
                 writer.flush();
                 writer.close();
@@ -129,14 +146,40 @@ public class LoginActivity extends BaseActivity {
                 while ((line = br.readLine()) != null) {
                     sb.append(line);
                 }
-                System.out.println(sb.toString());
                 if (sb.toString().contains("综合教务管理系统")) {
                     LogUtils.e("登陆成功");
                     if(utils==null){
                         utils=new CacheUtils(LoginActivity.this, CacheUtils.CacheType.FOR_ACCOUNT);
                     }
                     utils.setCache(CacheUtils.USER_NAME,nameStr);
-                    utils.setCache(CacheUtils.USER_PWD,pwdStr);
+                    utils.setCache(CacheUtils.USER_PWD, pwdStr);
+                    try{
+                        String userInfo=getNetDataUTF(Constant.URL_GET_USER_MSG, ck);
+                        Document doc=Jsoup.parse(userInfo);
+                        String userName=doc.getElementsByAttributeValue("name", "realname").first().attr("value");
+                        String userDepart=doc.getElementsByAttributeValue("name", "departmentid").first().attr("value");
+                        String userGrade=doc.getElementsByAttributeValue("name", "gradeid").first().attr("value");
+                        String userMajor=doc.getElementsByAttributeValue("name", "majorid").first().attr("value");
+                        String userGender=doc.getElementsByAttributeValue("name","gender").first().attr("value");
+                        //处理一下~
+                        Pattern pattern=Pattern.compile(userMajor+"([^<]*)");
+                        Matcher matcher=pattern.matcher(userInfo);
+                        matcher.find();userMajor=matcher.group(1);
+                        pattern=Pattern.compile(userDepart + "([^<]*)");
+                        matcher=pattern.matcher(userInfo);
+                        matcher.find();userDepart=matcher.group(1);
+                        pattern=Pattern.compile(userGrade + "([^<]*)");
+                        matcher=pattern.matcher(userInfo);
+                        matcher.find();userGrade=matcher.group(1);
+                        Statesutil.setUserNameChinese(LoginActivity.this, userName);
+                        Statesutil.setUserMajor(LoginActivity.this, userMajor.replaceFirst("\">", ""));
+                        Statesutil.setUserDepart(LoginActivity.this, userDepart.replaceFirst("\">", ""));
+                        Statesutil.setUserGrade(LoginActivity.this, userGrade.replaceFirst("\">", ""));
+                        Statesutil.setUserGender(LoginActivity.this,userGender);
+                    }catch (Exception e){
+                        System.out.println(e.getMessage());
+                        handler.obtainMessage(3).sendToTarget();
+                    }
                     return getNetData(Constant.URL_GET_COURSE_LIST, ck);
                 }else if (sb.toString().contains("您输入的验证码不正确")){
 
@@ -165,9 +208,12 @@ public class LoginActivity extends BaseActivity {
                 Elements eles = doc.getElementsByClass("infolist");
                 int i = 0;
                 CacheUtils bookList=new CacheUtils(LoginActivity.this, CacheUtils.CacheType.FOR_COURSE_LIST);
+//                BookListDao dao=new BookListDao(LoginActivity.this);
                 for (Element item : eles) {
                     if (i++ % 2 == 0) {
                         bookList.setCache(i/2+"",item.text());
+//                        dao.insert(new Book(null, item.text(), null, null, null, null, null));
+//                        App.courseList.add(new Book(null,item.text(),null,null,null,null,null));
                     }
                 }
                 showToast("学生登陆成功");
@@ -177,7 +223,7 @@ public class LoginActivity extends BaseActivity {
             }
             Statesutil.setLogin(LoginActivity.this, true);
             openActivity(new Intent(LoginActivity.this, MainActivity.class));
-            super.onPostExecute(o);
+            finish();
         }
     }
 
@@ -228,5 +274,39 @@ public class LoginActivity extends BaseActivity {
 
         return null;
     }
+    private String getNetDataUTF(String url, String cookie) {
 
+        try {
+            StringBuffer sb = new StringBuffer();
+            HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
+            if (!TextUtils.isEmpty(cookie)) {
+                conn.setRequestProperty("Cookie", cookie);
+            }
+            conn.setConnectTimeout(3000);
+            conn.setReadTimeout(3000);
+            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"));
+            String line;
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+            return sb.toString();
+        } catch (Exception e) {
+            e.printStackTrace(System.out);
+            handler.obtainMessage(3).sendToTarget();
+        }
+
+        return null;
+    }
+    /**
+     * LoginDialog
+     */
+    public Dialog create(Context context,String msg){
+        View view= LayoutInflater.from(context).inflate(R.layout.login_dialog_layout,null);
+        ((TextView)view.findViewById(R.id.msgTv)).setText(TextUtils.isEmpty(msg)?"":msg);
+        Dialog dialog=new Dialog(context,R.style.cus_dialog_style);
+        dialog.setContentView(view);
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+        return dialog;
+    }
 }

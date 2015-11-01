@@ -21,8 +21,8 @@ public class CacheUtils {
 
     /**
      * FOR_ACCOUNT:设置当前登陆账户
-     * key :user_name |  user_pwd
-     * value:  ..     |    ...
+     * key :user_name |  user_pwd   |   user_type
+     * value:  ..     |    ...      |   user_type_1  user_type_2
      *
      *
      * FOR_COURSE_LIST:设置用户的课程列表
@@ -40,6 +40,8 @@ public class CacheUtils {
     public String getCache(String key){
         return mPreference.getString(key,null);
     }
+
+    public void clear(){mPreference.edit().clear().commit();}
     public static final String USER_NAME="user_name";
     public static final String USER_PWD="user_pwd";
     public static final String USER_TYPE="user_type";//账号类型

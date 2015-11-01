@@ -56,7 +56,11 @@ public class ViewHolder {
 		iv.setImageResource(resId);
 		return this;
 	}
-
+	public ViewHolder setBackgroundResource(int viewId,int resId){
+		View view=getView(viewId);
+		view.setBackgroundResource(resId);
+		return this;
+	}
 	public View getConvertView() {
 		return mConvertView;
 	}

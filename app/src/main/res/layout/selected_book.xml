@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="com.yalantis.taurus.PullToRefreshView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:clipToPadding="false"
-    android:fitsSystemWindows="true"
-    android:orientation="vertical">
+    android:fitsSystemWindows="true">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -23,11 +24,30 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/bar_back"
-            android:text="已选图书列表"
+            android:text="已购图书"
+            android:layout_centerVertical="true"
             android:textColor="#fff"
             android:textSize="25dp" />
+
+
     </RelativeLayout>
+
+    <com.yalantis.taurus.PullToRefreshView
+        android:id="@+id/list_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:type="sun">
+
+        <ListView
+            android:id="@+id/in_list_view"
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            android:scrollbars="none"
+            android:background="#ffffffff"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </com.yalantis.taurus.PullToRefreshView>
 </LinearLayout>

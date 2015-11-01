@@ -11,5 +11,7 @@
     <style name="AppTheme.DrawerArrowToggle" parent="Base.Widget.AppCompat.DrawerArrowToggle">
         <item name="color">@android:color/white</item>
     </style>
-
+    <style name="cus_dialog_style" parent="android:style/Theme.Dialog" >
+        <item name="android:windowBackground">@drawable/login_dialog_bg</item>
+    </style>
 </resources>
