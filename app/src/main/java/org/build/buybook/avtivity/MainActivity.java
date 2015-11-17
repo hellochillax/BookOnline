@@ -2,15 +2,18 @@ package org.build.buybook.avtivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -34,7 +37,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import at.markushi.ui.ActionView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -46,7 +48,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     @Bind(R.id.id_drawer_layout)
     DrawerLayout mDrawerLayout;
     @Bind(R.id.bar_logo)
-    ActionView mLogo;
+    ImageView mLogo;
     @Bind(R.id.bar_buy)
     TextView mBuy;
     @Bind(R.id.list_view)
@@ -71,10 +73,11 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     AlertDialog exitDialog;
 
     public void buy(final Book book, final int position) {
-        dialog = new AlertDialog.Builder(this).setTitle(book.ordered == null ? "确定要预定吗?" : "确定要取消预定吗?").setMessage("书籍价格:" + book.book_price)
+        dialog = new AlertDialog.Builder(this).setTitle(book.ordered == null ? "确定要预定吗?" : "确定要取消预定吗?").setMessage("书名:" + book.book_name)
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        showLoadingDialog("操作中,请稍候...");
                         BookGetUtils.orderOneBook(MainActivity.this, new CacheUtils(MainActivity.this, CacheUtils.CacheType.FOR_ACCOUNT).getCache(CacheUtils.USER_NAME), book.book_id, book.ordered == null ? "1" : "0", position, handler);
                     }
 
@@ -90,6 +93,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
+            dismissLoadingDialog();
             switch (msg.what) {
                 case BookGetUtils.NET_ERROR:
                     showToast("网络错误");
@@ -137,15 +141,17 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
+                mLogo.setImageResource(R.mipmap.back);
                 list_clickable=false;
-                title.setText("菜单");
+                title.setText("个人中心");
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
+                mLogo.setImageResource(R.mipmap.open_left_menu);
                 list_clickable=true;
-                title.setText("订书");
+                title.setText("掌上选书");
             }
 
         });
@@ -175,6 +181,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     }
 
     private void refrushBookList() {
+        showLoadingDialog("刷新数据中,请稍候...");
         CacheUtils cacheUtils = new CacheUtils(this, CacheUtils.CacheType.FOR_COURSE_LIST);
         List<String> list = new ArrayList<>();
         for (int i = 0; ; i++) {
@@ -192,11 +199,11 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         mDrawerLayout.closeDrawers();
         switch (position) {
             case 0:
-                openActivity(new Intent(this, SelectedBook.class));
+                openActivityForResult(new Intent(this, SelectedBook.class), 0x250);
                 break;
             case 1:
                 if (exitDialog == null) {
-                    exitDialog = new AlertDialog.Builder(this).setTitle("提醒").setMessage("确定要退出应用?")
+                    exitDialog = new AlertDialog.Builder(this).setTitle("提醒").setMessage("确定要注销应用?")
                             .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
@@ -215,6 +222,12 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
                 showToast("数据导出");
                 break;
         }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        refrushBookList();
     }
 
     private void logout() {
@@ -238,6 +251,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
 
     public class BookListAdapter extends BaseAdapter {
 
+        String []colors=new String[]{"#a6ede7","#bbf0d2","#f75f6b","#eccdb0"};
         @Override
         public int getCount() {
             return App.courseList.size();
@@ -245,15 +259,39 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHolder holder = ViewHolder.get(MainActivity.this, convertView, R.layout.book_list_item, position, parent);
+            final ViewHolder holder = ViewHolder.get(MainActivity.this, convertView, R.layout.book_list_item, position, parent);
             Book item = App.courseList.get(position);
             holder.setText(R.id.book_name, item.book_name)
-                    .setText(R.id.book_course, "相关课程:"+item.course_name)
+                    .setText(R.id.book_course, "相关课程:" + item.course_name)
                     .setText(R.id.book_price, "¥"+item.book_price)
                     .setText(R.id.book_publish, "出版社:"+item.pub_house)
-                    .setText(R.id.book_order, item.ordered == null ? "未订阅" : "已订阅")
+                    .setText(R.id.book_order, item.ordered == null ? "未预定" : "已预定")
+                    .setColor(R.id.left_color, Color.parseColor(colors[(int)(Math.random()*4)]))
                     .setBackgroundResource(R.id.book_order, item.ordered == null ? R.mipmap.not_order : R.mipmap.is_order);
+            holder.getConvertView().setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            holder.getView(R.id.content).setBackgroundResource(R.drawable.list_item_selected_bg);
+                            return true;
+                        case MotionEvent.ACTION_MOVE:
+                            return true;
+                        case MotionEvent.ACTION_CANCEL:
+                            holder.getView(R.id.content).setBackgroundResource(R.drawable.list_item_normal_bg);
+                            return true;
+                        case MotionEvent.ACTION_UP:
+                            holder.getView(R.id.content).setBackgroundResource(R.drawable.list_item_normal_bg);
+                            if(list_clickable){
+                                buy(App.courseList.get(listView.getPositionForView(v)), listView.getPositionForView(v));
+                            }
+                            return true;
+                    }
+                    return false;
+                }
+            });
             return holder.getConvertView();
         }
     }
+
 }

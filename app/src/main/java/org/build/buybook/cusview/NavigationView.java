@@ -5,9 +5,9 @@ import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -17,7 +17,6 @@ import org.build.buybook.R;
 import org.build.buybook.adapter.BaseAdapter;
 import org.build.buybook.adapter.ViewHolder;
 import org.build.buybook.avtivity.MainActivity;
-import org.build.buybook.utils.CacheUtils;
 import org.build.buybook.utils.Statesutil;
 
 import butterknife.Bind;
@@ -69,15 +68,10 @@ public class NavigationView extends LinearLayout {
         ButterKnife.bind(this);
         userName.setText(Statesutil.getUserNameChinese(context));
         userClass.setText(Statesutil.getUserDepart(context));
-        userClass2.setText(Statesutil.getUserGrade(context));
+        userClass2.setText("  "+Statesutil.getUserGrade(context)+"级");
         userClass3.setText(Statesutil.getUserMajor(context));
-        userLogo.setImageResource(Statesutil.getUserGender(context).contains("男")?R.mipmap.boy_1:R.mipmap.girl_1);
-//        if (new CacheUtils(context, CacheUtils.CacheType.FOR_ACCOUNT).getCache(CacheUtils.USER_TYPE).equals(CacheUtils.USER_TYPE_2)) {
-//            menuTexts = new String[]{"已选图书", "注销账号", "数据导出"};
-//        } else {
-//            menuTexts = new String[]{"已选图书", "注销账号"};
-//        }
-        menuTexts = new String[]{"已选图书", "注销账号"};
+        userLogo.setImageResource(Statesutil.getUserGender(context).contains("男") ? R.mipmap.boy_1 : R.mipmap.girl_1);
+        menuTexts = new String[]{"已订图书", "注销账号"};
         mMenuLv.setAdapter(new MenuAdapter());
     }
 

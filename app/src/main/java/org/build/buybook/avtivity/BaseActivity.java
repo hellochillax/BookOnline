@@ -2,11 +2,15 @@ package org.build.buybook.avtivity;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.readystatesoftware.systembartint.SystemBarTintManager;
@@ -67,4 +71,31 @@ public class BaseActivity extends Activity {
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_clam);
     }
+    public void openActivityForResult(Intent intent,int reqCode) {
+        startActivityForResult(intent, reqCode);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_clam);
+    }
+    public Dialog showLoadingDialog(String msg){
+        if(loadingDialog==null){
+            loadingDialog=createLoadingDialog(msg);
+        }
+        loadingDialog.show();
+        return loadingDialog;
+    }
+    public void dismissLoadingDialog(){
+        if(loadingDialog!=null){
+            loadingDialog.dismiss();
+            loadingDialog=null;
+        }
+    }
+    public Dialog createLoadingDialog(String msg){
+        View view= LayoutInflater.from(this).inflate(R.layout.login_dialog_layout,null);
+        ((TextView)view.findViewById(R.id.msgTv)).setText(msg);
+        Dialog dialog=new Dialog(this,R.style.cus_dialog_style);
+        dialog.setContentView(view);
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+        return dialog;
+    }
+    private Dialog loadingDialog;
 }

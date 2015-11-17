@@ -46,6 +46,11 @@ public class ViewHolder {
 		tv.setText(text);
 		return this;
 	}
+	public ViewHolder setColor(int viewId, int color) {
+		View tv = getView(viewId);
+		tv.setBackgroundColor(color);
+		return this;
+	}
 	public ViewHolder setImageBitmap(int viewId,Bitmap bm){
 		ImageView iv = getView(viewId);
 		iv.setImageBitmap(bm);

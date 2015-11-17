@@ -29,7 +29,7 @@
         </activity>
         <activity android:name=".avtivity.MainActivity"/>
         <activity android:name=".avtivity.SelectedBook"/>
-        <activity android:name=".avtivity.LoginActivity"/>
+        <activity android:name=".avtivity.LoginActivity" />
     </application>
 
 </manifest>

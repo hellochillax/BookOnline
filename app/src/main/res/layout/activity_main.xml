@@ -14,22 +14,22 @@
         android:background="#64AEFC"
         android:padding="5dp">
 
-        <!--<ImageView-->
-            <!--android:id="@+id/bar_logo"-->
-            <!--android:layout_width="25dp"-->
-            <!--android:layout_height="25dp"-->
-            <!--android:layout_alignParentLeft="true"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:src="@mipmap/open_left_menu" />-->
-        <at.markushi.ui.ActionView
-            xmlns:app2="at.markushi.ui.ActionView"
+        <ImageView
             android:id="@+id/bar_logo"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            app2:av_color="#ffffff"
-            app2:av_action="drawer"/>
+            android:src="@mipmap/open_left_menu" />
+        <!--<at.markushi.ui.ActionView-->
+            <!--xmlns:app2="at.markushi.ui.ActionView"-->
+            <!--android:id="@+id/bar_logo"-->
+            <!--android:layout_width="40dp"-->
+            <!--android:layout_height="40dp"-->
+            <!--android:layout_alignParentLeft="true"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--app2:av_color="#ffffff"-->
+            <!--app2:av_action="drawer"/>-->
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
@@ -39,7 +39,7 @@
             android:text="订书"
             android:layout_centerVertical="true"
             android:textColor="#fff"
-            android:textSize="25dp" />
+            android:textSize="22sp" />
 
 
         <TextView
@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:textColor="#ffffff"
-            android:textSize="22sp"
+            android:textSize="20sp"
             android:layout_centerVertical="true"
             android:visibility="gone"
             android:text="购买"/>
@@ -69,7 +69,9 @@
             <ListView
                 android:id="@+id/in_list_view"
                 android:scrollbars="none"
-                android:background="#ffffffff"
+                android:background="#eeeeee"
+                android:divider="@null"
+                android:cacheColorHint="@android:color/transparent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 

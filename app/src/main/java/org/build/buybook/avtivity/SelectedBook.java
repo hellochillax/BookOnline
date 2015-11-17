@@ -52,15 +52,17 @@ public class SelectedBook extends BaseActivity implements AdapterView.OnItemClic
         mPtrv.setOnRefreshListener(this);
         adapter=new OrderAdapter();
         listView.setAdapter(adapter);
+        showLoadingDialog("获取数据中,请稍候...");
         onRefresh();
     }
     AlertDialog dialog;
 
     public void buy(final Book book, final int position) {
-        dialog = new AlertDialog.Builder(this).setTitle("确定要取消预定吗?").setMessage("书籍价格:" + book.book_price)
+        dialog = new AlertDialog.Builder(this).setTitle("确定要取消预定吗?").setMessage("书名:" + book.book_name)
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        showLoadingDialog("操作中,请稍候...");
                         BookGetUtils.orderOneBook(SelectedBook.this, new CacheUtils(SelectedBook.this, CacheUtils.CacheType.FOR_ACCOUNT).getCache(CacheUtils.USER_NAME), book.book_id, "0", position, handler);
                     }
 
@@ -76,6 +78,7 @@ public class SelectedBook extends BaseActivity implements AdapterView.OnItemClic
         @Override
         public void handleMessage(Message msg) {
             mPtrv.setRefreshing(false);
+            dismissLoadingDialog();
             switch (msg.what){
                 case BookGetUtils.GET_ORDER_LIST_OK:
                     showToast("获取数据成功");
@@ -130,17 +133,13 @@ public class SelectedBook extends BaseActivity implements AdapterView.OnItemClic
             ViewHolder holder=ViewHolder.get(SelectedBook.this,convertView,R.layout.book_list_item,position,parent);
             Book item=App.orderList.get(position);
             holder.setText(R.id.book_name, item.book_name)
-                    .setText(R.id.book_publish,item.pub_house)
-                    .setText(R.id.book_price,item.book_price)
-                    .setText(R.id.book_course,item.course_name)
-                    .setBackgroundResource(R.id.book_order,R.drawable.un_buy_bg);
+                    .setText(R.id.book_course, "相关课程:" + item.course_name)
+                    .setText(R.id.book_price, "¥"+item.book_price)
+                    .setText(R.id.book_publish, "出版社:"+item.pub_house)
+                    .setText(R.id.book_order, item.ordered == null ? "未订阅" : "已订阅")
+                    .setBackgroundResource(R.id.book_order, item.ordered == null ? R.mipmap.not_order : R.mipmap.is_order);
             return holder.getConvertView();
         }
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        onRefresh();
-    }
 }

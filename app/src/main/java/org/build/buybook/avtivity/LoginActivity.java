@@ -9,10 +9,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.lidroid.xutils.util.LogUtils;
@@ -61,11 +64,12 @@ public class LoginActivity extends BaseActivity {
     EditText userValidate;
     @Bind(R.id.user_validate_image)
     ImageView userValidateImage;
+    @Bind(R.id.scrollView)
+    ScrollView scrollView;
     @OnClick(R.id.user_validate_image)
     public void to_change(){
         new LoginPagerTask().execute();
     }
-    Dialog dialog;
     @OnClick(R.id.user_login)
     public void to_login() {
         utils=new CacheUtils(this, CacheUtils.CacheType.FOR_ACCOUNT);
@@ -77,10 +81,7 @@ public class LoginActivity extends BaseActivity {
         } else if (TextUtils.isEmpty(validateStr)) {
             showToast("验证码不能为空");
         } else {
-            if(dialog==null){
-                dialog=create(this,"登陆中,请稍候...");
-            }
-            dialog.show();
+            showLoadingDialog("登录中,请稍候...");
             new LoginTask().execute();
         }
 
@@ -88,7 +89,7 @@ public class LoginActivity extends BaseActivity {
     Handler handler=new Handler(){
         @Override
         public void handleMessage(Message msg) {
-            dialog.dismiss();
+            dismissLoadingDialog();
             switch (msg.what){
                 case 1:
                     showToast("您输入的验证码不正确");
@@ -113,6 +114,22 @@ public class LoginActivity extends BaseActivity {
         tintManager.setStatusBarTintResource(R.color.left_list_text_color);//通知栏所需颜色
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+        userValidate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+                            userValidate.setOnFocusChangeListener(null);
+                            userValidate.requestFocus();
+                        }
+                    });
+                }
+            }
+        });
+
         if(utils==null){
             utils=new CacheUtils(LoginActivity.this, CacheUtils.CacheType.FOR_ACCOUNT);
         }
@@ -297,16 +314,16 @@ public class LoginActivity extends BaseActivity {
 
         return null;
     }
-    /**
-     * LoginDialog
-     */
-    public Dialog create(Context context,String msg){
-        View view= LayoutInflater.from(context).inflate(R.layout.login_dialog_layout,null);
-        ((TextView)view.findViewById(R.id.msgTv)).setText(TextUtils.isEmpty(msg)?"":msg);
-        Dialog dialog=new Dialog(context,R.style.cus_dialog_style);
-        dialog.setContentView(view);
-        dialog.setCancelable(false);
-        dialog.setCanceledOnTouchOutside(false);
-        return dialog;
-    }
+//    /**
+//     * LoginDialog
+//     */
+//    public Dialog create(Context context,String msg){
+//        View view= LayoutInflater.from(context).inflate(R.layout.login_dialog_layout,null);
+//        ((TextView)view.findViewById(R.id.msgTv)).setText(TextUtils.isEmpty(msg)?"":msg);
+//        Dialog dialog=new Dialog(context,R.style.cus_dialog_style);
+//        dialog.setContentView(view);
+//        dialog.setCancelable(false);
+//        dialog.setCanceledOnTouchOutside(false);
+//        return dialog;
+//    }
 }

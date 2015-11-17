@@ -26,10 +26,10 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/bar_back"
-            android:text="已购图书"
+            android:text="已订图书"
             android:layout_centerVertical="true"
             android:textColor="#fff"
-            android:textSize="25dp" />
+            android:textSize="22sp" />
 
 
     </RelativeLayout>
@@ -45,7 +45,7 @@
             android:divider="@null"
             android:dividerHeight="0dp"
             android:scrollbars="none"
-            android:background="#ffffffff"
+            android:background="#eeeeee"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
