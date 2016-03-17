@@ -4,9 +4,9 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:clipToPadding="false"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -14,44 +14,35 @@
         android:background="#64AEFC"
         android:padding="5dp">
 
-        <ImageView
+        <com.balysv.materialmenu.MaterialMenuView
             android:id="@+id/bar_logo"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:src="@mipmap/open_left_menu" />
-        <!--<at.markushi.ui.ActionView-->
-            <!--xmlns:app2="at.markushi.ui.ActionView"-->
-            <!--android:id="@+id/bar_logo"-->
-            <!--android:layout_width="40dp"-->
-            <!--android:layout_height="40dp"-->
-            <!--android:layout_alignParentLeft="true"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--app2:av_color="#ffffff"-->
-            <!--app2:av_action="drawer"/>-->
+            android:layout_centerVertical="true" />
+
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/bar_logo"
-            android:text="订书"
-            android:layout_centerVertical="true"
+            android:text="个人中心"
             android:textColor="#fff"
             android:textSize="22sp" />
 
 
         <TextView
-            android:id="@+id/bar_buy"
+            android:id="@+id/title2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:textColor="#ffffff"
-            android:textSize="20sp"
             android:layout_centerVertical="true"
-            android:visibility="gone"
-            android:text="购买"/>
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/bar_logo"
+            android:text="掌上选书"
+            android:textColor="#fff"
+            android:textSize="22sp" />
     </RelativeLayout>
 
     <android.support.v4.widget.DrawerLayout
@@ -68,12 +59,12 @@
 
             <ListView
                 android:id="@+id/in_list_view"
-                android:scrollbars="none"
-                android:background="#eeeeee"
-                android:divider="@null"
-                android:cacheColorHint="@android:color/transparent"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:background="#eeeeee"
+                android:cacheColorHint="@android:color/transparent"
+                android:divider="@null"
+                android:scrollbars="none" />
 
         </com.yalantis.taurus.PullToRefreshView>
 
@@ -82,8 +73,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="left"
-            android:divider="@null"
             android:background="#64AEFC"
+            android:divider="@null"
             android:fitsSystemWindows="true">
 
         </org.build.buybook.cusview.NavigationView>

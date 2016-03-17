@@ -41,4 +41,5 @@ dependencies {
     compile 'de.hdodenhof:circleimageview:2.0.0'
     compile 'com.wang.avi:library:1.0.0'
     compile 'com.nineoldandroids:library:2.4.0'
+    compile 'com.balysv.materialmenu:material-menu-abc:1.5.4'
 }

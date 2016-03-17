@@ -17,6 +17,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.balysv.materialmenu.MaterialMenu;
+import com.balysv.materialmenu.MaterialMenuDrawable;
 import com.google.gson.Gson;
 import com.lidroid.xutils.util.LogUtils;
 import com.yalantis.taurus.PullToRefreshView;
@@ -48,9 +50,9 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     @Bind(R.id.id_drawer_layout)
     DrawerLayout mDrawerLayout;
     @Bind(R.id.bar_logo)
-    ImageView mLogo;
-    @Bind(R.id.bar_buy)
-    TextView mBuy;
+    MaterialMenu mLogo;
+    @Bind(R.id.title2)
+    TextView title2;
     @Bind(R.id.list_view)
     PullToRefreshView mPtrv;
     @Bind(R.id.in_list_view)
@@ -135,23 +137,32 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        title.setAlpha(0  );
         accountUtils = new CacheUtils(this, CacheUtils.CacheType.FOR_ACCOUNT);
         mNvMenu.getmMenuLv().setOnItemClickListener(this);
         mDrawerLayout.setDrawerListener(new DrawerLayout.SimpleDrawerListener() {
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                mLogo.setImageResource(R.mipmap.back);
+//                mLogo.setImageResource(R.mipmap.back);
+                mLogo.setState(MaterialMenuDrawable.IconState.ARROW);
                 list_clickable=false;
-                title.setText("个人中心");
+            }
+
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                super.onDrawerSlide(drawerView, slideOffset);
+                title.setAlpha(slideOffset);
+                title2.setAlpha(1-slideOffset);
+                mLogo.setTransformationOffset(MaterialMenuDrawable.AnimationState.BURGER_ARROW,slideOffset);
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
-                mLogo.setImageResource(R.mipmap.open_left_menu);
+//                mLogo.setImageResource(R.mipmap.open_left_menu);
+                mLogo.setState(MaterialMenuDrawable.IconState.BURGER);
                 list_clickable=true;
-                title.setText("掌上选书");
             }
 
         });
